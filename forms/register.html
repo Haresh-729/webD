@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container" id="maindiv">
+        <div>
+            <label class="st" id="st1" style="border-top-left-radius: 10px; border-bottom-left-radius: 10px;">Step 1</label>
+            <label class="st" id="st2" style="border-radius: 0px;">Step 2</label>
+            <label class="st" id="st3" style="border-top-right-radius: 10px; border-bottom-right-radius: 10px;">Step 3</label>
+        </div>
+        <form id="form1" style="display: block;">
+            <h1>Login Form</h1>
+            <label for="user">Username</label>
+            <input value="" type="text" id="user" placeholder="Enter Username"><br>
+            <label for="pass">Password</label>
+            <input value="" type="password" id="pass" placeholder="Enter Password"><br>
+            <input type="button" id="f1n" value="Next">
+        </form>
+        <form id="form2" style="display: none;">
+            <h1>Personal Detail</h1>
+            <label for="fname">Full Name</label>
+            <input value="" type="text" id="name" placeholder="Enter Full Name"><br>
+            <label for="email">Email</label>
+            <input value="" type="email" id="email" placeholder="Email"><br>
+            <label for="contact">Contact</label>
+            <input value="" type="text" id="contact" placeholder="Contact"><br>
+            <input type="button" id="f2b" value="Back">
+            <input type="button" id="f2n" value="Next">
+        </form>
+        <form id="form3" style="display: none;">
+            <h1>Educational Details</h1>
+            <label for="question">Are you a student of DJSCE?</label>
+            <input type="radio" name="rad" id="yes" value="Yes">Yes
+            <input type="radio" name="rad" id="no" value="No">No<br>
+            <label for="sap" id ="saplab" style="display: none;">Sap Id</label>
+            <input value="" type="text" id="sap" style="display: none;" placeholder="Enter SAP ID"><br>
+            <input type="button" id="f3b" value="Back">
+            <input type="button" id="f3n" value="Next">
+        </form>
+    </div>
+</body>
+<script>
+
+    var st1 = document.getElementById("st1");
+    var st2 = document.getElementById("st2");
+    var st3 = document.getElementById("st3");
+
+    var f1 = document.getElementById("form1");
+    var f2 = document.getElementById("form2");
+    var f3 = document.getElementById("form3");
+
+    var f1n = document.getElementById("f1n");
+    var f2n = document.getElementById("f2n");
+    var f3n = document.getElementById("f3n");
+
+    var f2b = document.getElementById("f2b");
+    var f3b = document.getElementById("f3b");
+    var f3h = document.getElementById("f3h");
+
+    var uname = document.getElementById("user");
+    var pass = document.getElementById("pass");
+    var fname = document.getElementById("name");
+    var email = document.getElementById("email");
+    var contact = document.getElementById("contact");
+    var sap = document.getElementById("sap");
+    var yesRadio = document.getElementById("yes");
+    var noRadio = document.getElementById("no");
+    var saplab = document.getElementById("saplab");
+
+    f1n.addEventListener("click", ()=>{
+        var uflag = false;
+        var pflag = false;
+        if(uname.value == "" || pass.value == ""){
+            alert("Username or password should not be empty.");
+            uflag = true;
+        }else if(uname.value.includes(" ")){
+            alert("Username should not contain spaces.");
+            uflag = true;
+        }else if(pass.value == ""){
+            alert("Password should not be empty.");
+            pflag = true;
+        }else if(pass.value.includes(" ")){
+            alert("Password should not contain spaces.");
+            pflag = true;
+        }else if(pass.value.length < 8){
+            alert("Password should be greater than 7 characters");
+            pflag = true;
+        }else if(pass.value.length >= 8){
+            var res = checkPasswordComplexity(pass.value);
+            if(!res) {
+                alert("Password should contain at least one upper case, lower case character, one number, and one special character");
+                pflag = true;
+            }
+        }
+
+        if(!uflag && !pflag){
+            f1.style.display = "none";
+            f2.style.display = "block";
+            f3.style.display = "none";   
+            st1.style.backgroundColor = "chartreuse";         
+        }
+    })
+    f2n.addEventListener("click", ()=>{
+        var fn = 0;
+        var em = 0;
+        var con = 0;
+        if(fname.value == ""){
+            alert("Full name should not be empty.");
+            fn = 1;
+        }else if(email.value == ""){
+            alert("Email should not be empty.");
+            em = 1;
+        }else if(contact.value == ""){
+            alert("contact should not be empty.");
+            con = 1;
+        }else if(!checkEmailValidity(email.value)){
+            alert("Email should contain @ and .com");
+            em = 1;
+        }else if(!checkContactValidity(contact.value)){
+            alert("Contact should contain only 10 digits.");
+            con = 1;
+        }else{
+            f1.style.display = "none";
+            f2.style.display = "none";
+            f3.style.display = "block";
+            st2.style.backgroundColor = "chartreuse";
+        }
+    })
+    f2b.addEventListener("click", ()=>{
+        f1.style.display = "block";
+        f2.style.display = "none";
+        f3.style.display = "none";
+    })
+    f3b.addEventListener("click", ()=>{
+        f1.style.display = "none";
+        f2.style.display = "block";
+        f3.style.display = "none";
+    })
+    yesRadio.addEventListener("click", ()=>{
+        sap.style.display = "block"
+        saplab.style.display = "block"
+
+    })
+    noRadio.addEventListener("click", ()=>{
+        sap.style.display = "none"
+        saplab.style.display = "none"
+
+    })
+    f3n.addEventListener("click", ()=>{
+
+        if(sap.value == "" && yesRadio.checked){
+            alert("Sap id should not be blank.");
+        }else if(!checksapValidity(sap.value) && yesRadio.checked){
+            alert("SAP id should contains 11 digits only.");
+        } else{
+            var md = document.getElementById("maindiv");
+            st3.style.backgroundColor = "chartreuse";
+            md.innerHTML = "<div id='infor'> You Entered : <br> Uname : "+ uname.value + "<br>name: "+ fname.value +"<br>email: "+ email.value +"<br>contact: "+ contact.value +"<br>SAP: "+ sap.value +"<h2>Successfully Entered.</h2> <input type='button' id='f3h' onclick='refreshWindow()' value='Home'> </div>";
+        }
+        
+    })
+    f3h.addEventListener("click", ()=>{
+        var md = document.getElementById("maindiv");
+        uname.value = "";
+        pass.value = "";
+        fname.value = "";
+        email.value = "";
+        contact.value = "";
+        sap.value = "";
+        f1.style.display = "block";
+        f2.style.display = "none";
+        f3.style.display = "none";
+    })
+    
+    function checkPasswordComplexity(pwd) {
+        var regularExpression = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9]).{8,}$/;
+        return regularExpression.test(pwd);
+    }
+
+    function checkEmailValidity(email) {
+        var regularExpression = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return regularExpression.test(email);
+    }
+    function checkContactValidity(contact) {
+        var regularExpression = /^\d{10}$/;
+        return regularExpression.test(contact);
+    }
+    function checksapValidity(contact) {
+        var regularExpression = /^\d{11}$/;
+        return regularExpression.test(contact);
+    }
+    function refreshWindow() {
+        window.location.reload();
+    }
+</script>
+</html>
